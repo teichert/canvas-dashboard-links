@@ -1,4 +1,5 @@
-const navigateToRelativeLink = () => window.location.href = window.location.origin + window.location.pathname + "/external_tools/3809";
+const getRelativeUrl = () => new URLSearchParams(window.location.search).get('url') || '';
+const navigateToRelativeLink = (relativeUrl) => window.location.href = window.location.origin + window.location.pathname + relativeUrl;
 const extractCourseLinks = () => [...document.querySelectorAll('a[href*="/courses/"].ic-DashboardCard__link')].map(a => a.href);
 const setPageTitle = (title) => document.title = title;
 const combineTitles = (courseTitle, pageTitle) => `${courseTitle} - ${pageTitle}`;
@@ -15,7 +16,7 @@ async function runOnTabAfterLoaded(tabId, info, state, self, func, args) {
 }
 
 async function captureTitleAndNavigate(tabId, info, state, self) {
-    const tab = await runOnTabAfterLoaded(tabId, info, state, self, navigateToRelativeLink);
+    const tab = await runOnTabAfterLoaded(tabId, info, state, self, navigateToRelativeLink, [state.relativeUrl]);
     if (!tab) return;
     chrome.tabs.onUpdated.addListener(makeListenerWithState(setCombinedTitle, { 
         targetTabId: state.targetTabId, 
@@ -30,17 +31,17 @@ async function setCombinedTitle(tabId, info, state, self) {
     await runOnTab(tabId, setPageTitle, [combineTitles(state.courseTitle, tab.title)]);
 }
 
-async function createCourseTab(windowId, url) {
+async function createCourseTab(windowId, url, relativeUrl) {
     const tab = await chrome.tabs.create({ windowId, url, active: false });
-    chrome.tabs.onUpdated.addListener(makeListenerWithState(captureTitleAndNavigate, { targetTabId: tab.id }));
+    chrome.tabs.onUpdated.addListener(makeListenerWithState(captureTitleAndNavigate, { targetTabId: tab.id, relativeUrl }));
 }
 
-function openCourseTabsWhenLinksReady(dashboardTabId, windowId, pollIntervalMs = 500) {
+function openCourseTabsWhenLinksReady(dashboardTabId, windowId, relativeUrl, pollIntervalMs = 500) {
     const interval = setInterval(async () => {
         const courseLinks = await extractFromTab(dashboardTabId, extractCourseLinks);
         if (!courseLinks?.length) return;
         clearInterval(interval);
-        courseLinks.forEach(url => createCourseTab(windowId, url));
+        courseLinks.forEach(url => createCourseTab(windowId, url, relativeUrl));
     }, pollIntervalMs);
     chrome.windows.onRemoved.addListener(function cleanup(closedWindowId) {
         if (closedWindowId === windowId) {
@@ -50,8 +51,9 @@ function openCourseTabsWhenLinksReady(dashboardTabId, windowId, pollIntervalMs =
     });
 }
 
-chrome.action.onClicked.addListener(async () => {
+(async () => {
+    const relativeUrl = getRelativeUrl();
     const window = await chrome.windows.create({ url: "https://snow.instructure.com/", focused: true });
     const tabs = await chrome.tabs.query({ windowId: window.id });
-    openCourseTabsWhenLinksReady(tabs[0].id, window.id);
-});
+    openCourseTabsWhenLinksReady(tabs[0].id, window.id, relativeUrl);
+})();
