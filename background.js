@@ -1,5 +1,5 @@
-const extractCourseLinks = () => [...document.querySelectorAll('a[href*="/courses/"].ic-DashboardCard__link')].map(a => a.href);
 const navigateToRelativeLink = () => window.location.href = window.location.origin + window.location.pathname + "/external_tools/3809";
+const extractCourseLinks = () => [...document.querySelectorAll('a[href*="/courses/"].ic-DashboardCard__link')].map(a => a.href);
 const setPageTitle = (title) => document.title = title;
 const combineTitles = (courseTitle, pageTitle) => `${courseTitle} - ${pageTitle}`;
 const runOnTab = async (tabId, extractor, args) => (await chrome.scripting.executeScript({ target: { tabId }, func: extractor, args }));
