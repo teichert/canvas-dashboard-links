@@ -1,0 +1,14 @@
+{
+  "name": "Canvas Relative Dashboard Tabs",
+  "description": "Open all published Canvas courses in tabs in a single window",
+  "version": "0.1",
+  "manifest_version": 3,
+  "permissions": ["scripting", "tabs", "windows"],
+  "host_permissions": [
+    "https://snow.instructure.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {} 
+}
