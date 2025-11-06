@@ -6,5 +6,9 @@
   "permissions": ["scripting", "tabs", "windows"],
   "host_permissions": [
     "https://snow.instructure.com/*"
-  ]
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Canvas Dashboard Links"
+  }
 }

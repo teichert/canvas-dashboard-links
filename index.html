@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Canvas Dashboard Links</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 15px; width: 300px; }
+        a { display: block; margin: 10px 0; color: #1976D2; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        input { width: 100%; padding: 5px; margin: 5px 0; box-sizing: border-box; }
+        label { font-size: 14px; display: block; margin-top: 10px; }
+        .custom-section { margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h3>Canvas Dashboard Links</h3>
+    
+    <a href="canvas-relative.html">Course Home Pages</a>
+    <a href="canvas-relative.html?url=/external_tools/3809">Attendance</a>
+    
+    <div class="custom-section">
+        <label>Custom link title:</label>
+        <input type="text" id="customTitle" placeholder="My Custom Link">
+        
+        <label>Custom path:</label>
+        <input type="text" id="customPath" placeholder="/external_tools/3809">
+        
+        <a href="" id="customLink">Custom Link</a>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
