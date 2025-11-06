@@ -1,7 +1,7 @@
 {
   "name": "Canvas Relative Dashboard Tabs",
   "description": "Open all published Canvas courses in tabs in a single window",
-  "version": "0.1",
+  "version": "0.0.3",
   "manifest_version": 3,
   "permissions": ["scripting", "tabs", "windows"],
   "host_permissions": [
